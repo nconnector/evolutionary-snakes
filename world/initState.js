@@ -1,7 +1,7 @@
 function initState() {
     console.log(`Setting state`);
-    this.GENERATION_SIZE = 50;
-    this.POPULATION_MINIMUM = 5;
+    this.NEW_GENERATION_POPULATION_SIZE = 5;
+    this.OFFSPRINGS_PER_CANDIDATE = 10;
     this.COLORS = {
         0: "white", // nothing
         1: "#3d8de0", // snake

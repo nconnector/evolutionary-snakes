@@ -47,13 +47,14 @@ function spawnWalls() {
     });
 }
 
-function spawnSnake(len = 8) {
+function spawnSnake(brain, parentId, lenInput) {
+    const len = lenInput ? lenInput : 8;
     const cells = spawn(this, len, this.TILES.snake);
     if (!cells) {
         console.error(`Cannot spawn snake.`);
         return;
     }
-    this.snakes.push(new Snake(this, cells));
+    this.snakes.push(new Snake(this, cells, brain, parentId));
 }
 
 function spawnFood() {

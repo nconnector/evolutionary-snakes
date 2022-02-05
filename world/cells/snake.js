@@ -1,8 +1,9 @@
 class Snake {
-    constructor(world, cells, brain) {
+    constructor(world, cells, brain, parentId = 0) {
         this.world = world;
         console.debug(`creating snake# ${world.snakeCount + 1}`);
         this.id = world.snakeCount + 1;
+        this.parentId = parentId;
         this.age = 0;
         this.world.snakeCount++;
         this.visionDistance = 5;
@@ -94,7 +95,7 @@ class Snake {
         if (dx === -1) illegalSensor = 1; // left illegal
         if (dy === 1) illegalSensor = 0; // up illegal
         if (dy === -1) illegalSensor = 2; // down illegal
-        sensorsAggregated[illegalSensor] = -101; // weight -101 is less than minimal
+        sensorsAggregated[illegalSensor] = Number.NEGATIVE_INFINITY; // weight
 
         switch (Math.max(...sensorsAggregated)) {
             case sensorsAggregated[0]:
@@ -181,20 +182,30 @@ class Snake {
         const newSnakeCells = this.cells.slice(-8);
 
         // chance = 25%, then random weight += randInt(-5, 5)
-        const newSnakeBrain = this.mutate(this.brain);
+        const newSnakeBrain = this.generateOffspringBrain();
         // remove 8 tail cells
         this.cells = this.cells.slice(0, 8);
         // generate new Snake
-        const newSnake = new Snake(this.world, newSnakeCells, newSnakeBrain);
+        const newSnake = new Snake(this.world, newSnakeCells, newSnakeBrain, this.id);
         this.world.snakes.push(newSnake);
     }
-    mutate(brain) {
+    generateOffspringBrain() {
         const mutationChance = 0.25;
+        const mutationMax = 5;
+        const mutationMin = -mutationMax;
         if (Math.random() > mutationChance) {
             // no mutation
-            return brain;
+            return this.brain;
         }
-        const newBrain = JSON.parse(JSON.stringify(brain));
+        const newBrain = JSON.parse(JSON.stringify(this.brain));
+        const brainSize = newBrain.length;
+        const brainY = Math.floor(Math.random() * brainSize);
+        const brainX = Math.floor(Math.random() * brainSize);
+        const sensor = Math.random() > 0.5 ? "food" : "block";
+        const sensorDirection = Math.floor(Math.random() * (3 + 1)); // 3 --> max index of sensor with 4 points
+        const mutation = Math.floor(Math.random() * (mutationMax - mutationMin + 1)) + mutationMin;
+        newBrain[brainY][brainX][sensor][sensorDirection] += mutation;
+        return newBrain;
     }
     die(causeOfDeath) {
         console.debug(`snake #${this.id} died of ${causeOfDeath}`);
