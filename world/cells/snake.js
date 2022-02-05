@@ -38,11 +38,13 @@ class Snake {
                 };
             })
         );
-        const dont = -100;
+        const dont = -1000;
         brain[5][4].block[3] = dont;
         brain[5][6].block[1] = dont;
         brain[4][5].block[0] = dont;
         brain[6][5].block[2] = dont;
+        brain[5][5].block = [0, 0, 0, 0];
+        brain[5][5].food = [0, 0, 0, 0];
 
         return brain;
     }
@@ -75,18 +77,30 @@ class Snake {
 
         FOV.forEach((row, y) => {
             row.forEach((cell, x) => {
+                let sensor;
+                if (x === 5 && y == 5) {
+                    return;
+                }
                 if (cell === TILES.wall || cell === TILES.snake) {
-                    sensorsActive.push(this.brain[y][x].block);
+                    sensor = this.brain[y][x].block;
                 }
                 if (cell === TILES.food) {
-                    sensorsActive.push(this.brain[y][x].food);
+                    sensor = this.brain[y][x].food;
                 }
+                if (!sensor) {
+                    return;
+                }
+                const dY = Math.abs(this.visionDistance - x); // distance from center
+                const dX = Math.abs(this.visionDistance - y); // distance from center
+                const distance = Math.max(dY, dX);
+                const distanceCoefficient = 6 - distance;
+                sensorsActive.push({ sensor, distanceCoefficient });
             });
         });
 
-        sensorsActive.forEach((sensor) => {
+        sensorsActive.forEach(({ sensor, distanceCoefficient }) => {
             sensor.forEach((weight, i) => {
-                sensorsAggregated[i] += weight;
+                sensorsAggregated[i] += weight * distanceCoefficient;
             });
         });
 
@@ -177,7 +191,7 @@ class Snake {
         this.energy = this.energyBase;
         // split if over length
         if (this.length >= this.maxLength) {
-            this.split();
+            // this.split();
         }
     }
     split() {
@@ -212,6 +226,7 @@ class Snake {
     }
     die(causeOfDeath) {
         console.debug(`snake #${this.id} died of ${causeOfDeath}`);
+        this.causeOfDeath = causeOfDeath;
         // remove from map
         this.cells.forEach((cell) => this.world.modifyTile(cell.x, cell.y, this.world.TILES.empty));
         // remove from world

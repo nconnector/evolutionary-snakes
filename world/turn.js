@@ -38,11 +38,22 @@ function newGeneration() {
 
     // log age
     const topAge = this.snakes[0].age;
-    console.log(`Top age: ${topAge}`);
     this.elders.push(topAge);
 
     // kill all snakes
     this.snakes.forEach((snake) => snake.die("generation change"));
+
+    // print stats
+    const deathToll = this.deadSnakes.reduce((acc, snake) => {
+        const causeOfDeath = snake.causeOfDeath;
+        if (acc[causeOfDeath]) {
+            acc[causeOfDeath]++;
+        } else {
+            acc[causeOfDeath] = 1;
+        }
+        return acc;
+    }, {});
+    console.log(JSON.stringify({ topAge, deathToll }, undefined, 4));
 
     // generate array of brains from N oldest dead snakes
     const oldestSnakes = this.deadSnakes
