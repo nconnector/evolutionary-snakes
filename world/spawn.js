@@ -1,10 +1,9 @@
-function spawn(lengthRequired, content, objectFactory, attemptCount = 0) {
+function spawn(world, lengthRequired, content, attemptCount = 0) {
     const maxAttempts = 3;
     let tiles = [];
-    // const contentName = Object.keys(this.TILES).filter((tile) => this.TILES[tile] === content);
 
     // 1st cell
-    let tile = this.getEmptyRandomTile();
+    let tile = world.getEmptyRandomTile();
     if (!tile) {
         console.log(`Cannot spawn "${content}"`);
         return null;
@@ -13,7 +12,7 @@ function spawn(lengthRequired, content, objectFactory, attemptCount = 0) {
 
     // remaining adjacent cells
     while (tiles.length < lengthRequired) {
-        tile = this.getEmptyAdjacentTile(tile.x, tile.y, tiles);
+        tile = world.getEmptyAdjacentTile(tile.x, tile.y, tiles);
         if (!tile) {
             //break, start over
             attemptCount++;
@@ -21,7 +20,7 @@ function spawn(lengthRequired, content, objectFactory, attemptCount = 0) {
                 console.warn(`No adjacent after ${attemptCount}`);
                 return null;
             }
-            return this.spawn(lengthRequired, content, objectFactory, attemptCount);
+            return spawn(world, lengthRequired, content, attemptCount);
         }
         tiles.push(tile);
     }
@@ -29,7 +28,8 @@ function spawn(lengthRequired, content, objectFactory, attemptCount = 0) {
         console.warn(`Multi-tile spawn failed: "${content}"`);
         return null;
     }
-    tiles.forEach((tile) => this.modifyTile(tile.x, tile.y, content));
+    tiles.forEach((tile) => world.modifyTile(tile.x, tile.y, content));
+    return tiles;
 }
 
 function spawnWalls() {
@@ -45,4 +45,14 @@ function spawnWalls() {
             }
         });
     });
+}
+
+function spawnSnake(len = 8) {
+    const cells = spawn(this, len, this.TILES.snake);
+    if (!cells) {
+        console.error(`Cannot spawn snake.`);
+        return;
+    }
+    this.snakes.push(new Snake(this, cells));
+    this.snakeCount++;
 }

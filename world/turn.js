@@ -3,7 +3,11 @@ function nextTurn() {
     const resp = {
         turn: this.turn,
     };
+    this.snakes.forEach((snake) => snake.move());
 
-    this.spawn(16, this.TILES.cell);
+    if (this.turn === 1) {
+        this.spawnSnake(5);
+    }
+
     return resp;
 }

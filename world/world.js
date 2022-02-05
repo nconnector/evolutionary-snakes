@@ -16,6 +16,9 @@ class World {
         this.mapEmpty = this.getMapEmpty();
         this.drawAll();
     }
+    get snakeCount() {
+        return this.snakes.length;
+    }
     drawAll() {
         const ctx = this.context2d;
         if (!ctx) {
@@ -32,6 +35,7 @@ class World {
         const posX = x * this.tileSize;
         const posY = y * this.tileSize;
         if (!id) {
+            // TODO:: strokes (grid) as separate canvas
             ctx.strokeStyle = "lightgray";
             // outline the tile
             ctx.strokeRect(posX, posY, this.tileSize, this.tileSize);
@@ -40,6 +44,9 @@ class World {
         ctx.fillStyle = this.COLORS[id];
         // draw the tile
         ctx.fillRect(posX, posY, this.tileSize, this.tileSize);
+    }
+    getTileType(tileId) {
+        return Object.keys(this.TILES).filter((el) => this.TILES[el] === tileId);
     }
     modifyTile(x, y, content) {
         const wasEmpty = this.map[y][x] === 0;
@@ -57,7 +64,7 @@ class World {
 }
 World.prototype.nextTurn = nextTurn;
 World.prototype.initState = initState;
-World.prototype.spawn = spawn;
+World.prototype.spawnSnake = spawnSnake;
 World.prototype.spawnWalls = spawnWalls;
 World.prototype.getRandomFromArray = getRandomFromArray;
 World.prototype.getMapEmpty = getMapEmpty;
