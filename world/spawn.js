@@ -55,3 +55,10 @@ function spawnSnake(len = 8) {
     }
     this.snakes.push(new Snake(this, cells));
 }
+
+function spawnFood() {
+    const cells = spawn(this, 1, this.TILES.food);
+    if (!cells) {
+        console.error(`Cannot spawn food.`);
+    }
+}

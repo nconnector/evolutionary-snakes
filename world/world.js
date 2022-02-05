@@ -16,6 +16,17 @@ class World {
         this.mapEmpty = this.getMapEmpty();
         this.drawAll();
     }
+    get foodCount() {
+        let count = 0;
+        this.map.forEach((row) => {
+            row.forEach((tile) => {
+                if (tile === this.TILES.food) {
+                    count++;
+                }
+            });
+        });
+        return count;
+    }
     drawAll() {
         const ctx = this.context2d;
         if (!ctx) {
@@ -61,6 +72,7 @@ class World {
 }
 World.prototype.nextTurn = nextTurn;
 World.prototype.initState = initState;
+World.prototype.spawnFood = spawnFood;
 World.prototype.spawnSnake = spawnSnake;
 World.prototype.spawnWalls = spawnWalls;
 World.prototype.getRandomFromArray = getRandomFromArray;

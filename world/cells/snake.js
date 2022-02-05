@@ -1,16 +1,16 @@
 class Snake {
     constructor(world, cells, brain) {
         this.world = world;
-        console.warn(`creating snake# ${world.snakeCount + 1}`);
+        console.debug(`creating snake# ${world.snakeCount + 1}`);
         this.id = world.snakeCount + 1;
         this.world.snakeCount++;
         this.visionDistance = 5;
         this.energyBase = 10;
         this.minLength = 4;
-        this.maxLength = 15;
-        this.eat();
+        this.maxLength = 16;
         this.brain = brain ? brain : this.brainGenerateRandom(this.visionDistance);
         this.cells = cells;
+        this.eat();
 
         // const directions = ["left", "right", "up", "down"];
         // this.orientation = directions[Math.floor(Math.random() * directions.length)];
@@ -170,15 +170,32 @@ class Snake {
     eat() {
         this.energy = this.energyBase;
         // split if over length
+        if (this.length >= this.maxLength) {
+            this.split();
+        }
     }
     split() {
+        console.log("splitting");
+        const newSnakeCells = this.cells.slice(-8);
+
         // chance = 25%, then random weight += randInt(-5, 5)
-        // compute new head direction
+        const newSnakeBrain = this.mutate(this.brain);
         // remove 8 tail cells
+        this.cells = this.cells.slice(0, 8);
         // generate new Snake
+        const newSnake = new Snake(this.world, newSnakeCells, newSnakeBrain);
+        this.world.snakes.push(newSnake);
+    }
+    mutate(brain) {
+        const mutationChance = 0.25;
+        if (Math.random() > mutationChance) {
+            // no mutation
+            return brain;
+        }
+        const newBrain = JSON.parse(JSON.stringify(brain));
     }
     die(causeOfDeath) {
-        console.log(`snake #${this.id} died of ${causeOfDeath}`);
+        console.debug(`snake #${this.id} died of ${causeOfDeath}`);
         // remove from map
         this.cells.forEach((cell) => this.world.modifyTile(cell.x, cell.y, this.world.TILES.empty));
         // remove from world

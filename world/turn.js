@@ -1,15 +1,20 @@
 function nextTurn() {
     this.turn++;
-    const resp = {
-        turn: this.turn,
-    };
+
+    const foodToSpawn = 2000 - this.foodCount;
+    for (let i = 0; i < foodToSpawn; i++) {
+        this.spawnFood();
+    }
+
     this.snakes.forEach((snake) => snake.move());
 
-    while (this.snakes.length < 5) {
+    while (this.snakes.length < 20) {
         len = this.snakes.length;
-        console.log({ len });
         this.spawnSnake();
     }
 
+    const resp = {
+        turn: this.turn,
+    };
     return resp;
 }
