@@ -1,0 +1,13 @@
+#canvas {
+    border: 1px solid lightgray;
+}
+#canvas-container {
+    height: 90vh;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+#menu {
+    width: 100px;
+}
