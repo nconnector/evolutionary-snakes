@@ -1,7 +1,8 @@
 function initState() {
     console.log(`Setting state`);
-    this.NEW_GENERATION_POPULATION_SIZE = 5;
+    this.NEW_GENERATION_POPULATION_SIZE = 10;
     this.OFFSPRINGS_PER_CANDIDATE = 10;
+    this.FOOD_CAP = 2500;
     this.COLORS = {
         0: "white", // nothing
         1: "#3d8de0", // snake
@@ -19,4 +20,5 @@ function initState() {
     this.snakes = [];
     this.deadSnakes = [];
     this.snakeCount = 0;
+    this.elders = [];
 }

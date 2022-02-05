@@ -40,4 +40,4 @@ class App {
     }
 }
 
-const app = new App(1000, 200, 100);
+const app = new App(4, 200, 100);

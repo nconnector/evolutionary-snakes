@@ -13,9 +13,6 @@ class Snake {
         this.brain = brain ? brain : this.brainGenerateRandom(this.visionDistance);
         this.cells = cells;
         this.eat();
-
-        // const directions = ["left", "right", "up", "down"];
-        // this.orientation = directions[Math.floor(Math.random() * directions.length)];
     }
     get head() {
         return this.cells[0];
@@ -28,7 +25,7 @@ class Snake {
     }
     brainGenerateRandom() {
         const matrixSize = this.visionDistance * 2 + 1;
-        const max = 100;
+        const max = 10;
         const min = -max;
         const getRandom = () => Math.floor(Math.random() * (max - min + 1)) + min;
 
@@ -36,11 +33,17 @@ class Snake {
         const brain = new Array(matrixSize).fill().map(() =>
             new Array(matrixSize).fill().map(() => {
                 return {
-                    food: [getRandom(), getRandom(), getRandom(), getRandom()],
-                    block: [getRandom(), getRandom(), getRandom(), getRandom()],
+                    food: [getRandom(), getRandom(), getRandom(), getRandom()], // Up Right Down Left
+                    block: [getRandom(), getRandom(), getRandom(), getRandom()], // Up Right Down Left
                 };
             })
         );
+        const dont = -100;
+        brain[5][4].block[3] = dont;
+        brain[5][6].block[1] = dont;
+        brain[4][5].block[0] = dont;
+        brain[6][5].block[2] = dont;
+
         return brain;
     }
     brainScan() {

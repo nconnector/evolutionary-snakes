@@ -2,7 +2,7 @@ function nextTurn() {
     this.turn++;
 
     const foodCount = this.foodCount;
-    const foodToSpawn = 2000 - foodCount;
+    const foodToSpawn = this.FOOD_CAP - foodCount;
     for (let i = 0; i < foodToSpawn; i++) {
         this.spawnFood();
     }
@@ -35,6 +35,11 @@ function newGeneration() {
         }
         return;
     }
+
+    // log age
+    const topAge = this.snakes[0].age;
+    console.log(`Top age: ${topAge}`);
+    this.elders.push(topAge);
 
     // kill all snakes
     this.snakes.forEach((snake) => snake.die("generation change"));
