@@ -5,8 +5,10 @@ function nextTurn() {
     };
     this.snakes.forEach((snake) => snake.move());
 
-    if (this.turn === 1) {
-        this.spawnSnake(5);
+    while (this.snakes.length < 5) {
+        len = this.snakes.length;
+        console.log({ len });
+        this.spawnSnake();
     }
 
     return resp;

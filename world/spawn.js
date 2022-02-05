@@ -54,5 +54,4 @@ function spawnSnake(len = 8) {
         return;
     }
     this.snakes.push(new Snake(this, cells));
-    this.snakeCount++;
 }

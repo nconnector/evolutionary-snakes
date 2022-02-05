@@ -16,9 +16,6 @@ class World {
         this.mapEmpty = this.getMapEmpty();
         this.drawAll();
     }
-    get snakeCount() {
-        return this.snakes.length;
-    }
     drawAll() {
         const ctx = this.context2d;
         if (!ctx) {

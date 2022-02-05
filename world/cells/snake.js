@@ -1,7 +1,9 @@
 class Snake {
     constructor(world, cells, brain) {
         this.world = world;
+        console.warn(`creating snake# ${world.snakeCount + 1}`);
         this.id = world.snakeCount + 1;
+        this.world.snakeCount++;
         this.visionDistance = 5;
         this.energyBase = 10;
         this.minLength = 4;
@@ -44,10 +46,6 @@ class Snake {
         const distance = this.visionDistance;
         const matrixSize = distance * 2 + 1;
         const map = this.world.map;
-        console.log({
-            x: this.head.x,
-            y: this.head.y,
-        });
         const xMin = this.head.x - distance;
         const yMin = this.head.y - distance;
         const yMax = map.length;
@@ -66,16 +64,45 @@ class Snake {
     }
     brainDecideDirection() {
         const FOV = this.brainScan();
-        const sensors = [0, 0, 0, 0]; // Up Right Down Left
+        const TILES = this.world.TILES;
+        const sensorsActive = [];
+        const sensorsAggregated = [0, 0, 0, 0]; // Up Right Down Left
 
-        switch (Math.max(...sensors)) {
-            case sensors[0]:
+        FOV.forEach((row, y) => {
+            row.forEach((cell, x) => {
+                if (cell === TILES.wall || cell === TILES.snake) {
+                    sensorsActive.push(this.brain[y][x].block);
+                }
+                if (cell === TILES.food) {
+                    sensorsActive.push(this.brain[y][x].food);
+                }
+            });
+        });
+
+        sensorsActive.forEach((sensor) => {
+            sensor.forEach((weight, i) => {
+                sensorsAggregated[i] += weight;
+            });
+        });
+
+        // move opposite to last is illegal (inwards)
+        let illegalSensor;
+        const dx = this.head.x - this.cells[1].x;
+        const dy = this.head.y - this.cells[1].y;
+        if (dx === 1) illegalSensor = 3; // right illegal
+        if (dx === -1) illegalSensor = 1; // left illegal
+        if (dy === 1) illegalSensor = 0; // up illegal
+        if (dy === -1) illegalSensor = 2; // down illegal
+        sensorsAggregated[illegalSensor] = -101; // weight -101 is less than minimal
+
+        switch (Math.max(...sensorsAggregated)) {
+            case sensorsAggregated[0]:
                 return "up";
-            case sensors[1]:
+            case sensorsAggregated[1]:
                 return "right";
-            case sensors[2]:
+            case sensorsAggregated[2]:
                 return "down";
-            case sensors[3]:
+            case sensorsAggregated[3]:
                 return "left";
         }
     }
@@ -137,8 +164,8 @@ class Snake {
         // die if under length
         if (this.length <= this.minLength) {
             this.die("starvation");
+            return;
         }
-        console.table(this.brainScan());
     }
     eat() {
         this.energy = this.energyBase;

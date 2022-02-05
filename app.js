@@ -32,4 +32,4 @@ class App {
     }
 }
 
-const app = new App(10, 10, 10);
+const app = new App(50, 200, 100);

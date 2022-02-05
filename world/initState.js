@@ -14,4 +14,5 @@ function initState() {
     };
     this.turn = 0;
     this.snakes = [];
+    this.snakeCount = 0;
 }
