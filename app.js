@@ -2,7 +2,12 @@ class App {
     constructor(turnsPerSecond, worldWidth, worldHeight) {
         this.delay = 1000 / turnsPerSecond;
 
-        this.turnCounter = document.querySelector("#turn-counter");
+        this.interface = {
+            turn: document.querySelector("#turn-counter"),
+            generation: document.querySelector("#generation-counter"),
+            food: document.querySelector("#food-counter"),
+            snakes: document.querySelector("#snakes-counter"),
+        };
         const canvas = document.querySelector("#canvas");
         this.world = new World(canvas, worldWidth, worldHeight);
         this.start();
@@ -28,7 +33,10 @@ class App {
         });
     }
     displayData(data) {
-        this.turnCounter.innerText = data?.turn;
+        // this.turnCounter.innerText = data?.turn;
+        Object.keys(this.interface).forEach((key) => {
+            this.interface[key].innerText = data[key];
+        });
     }
 }
 

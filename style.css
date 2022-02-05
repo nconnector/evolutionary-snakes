@@ -9,5 +9,7 @@
     justify-content: center;
 }
 #menu {
-    width: 100px;
+    width: 200px;
+    display: grid;
+    grid-template-columns: auto auto;
 }

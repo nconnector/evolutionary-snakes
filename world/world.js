@@ -16,6 +16,9 @@ class World {
         this.mapEmpty = this.getMapEmpty();
         this.drawAll();
     }
+    get snakesAliveCount() {
+        return this.snakes.length;
+    }
     get foodCount() {
         let count = 0;
         this.map.forEach((row) => {
@@ -71,6 +74,7 @@ class World {
     }
 }
 World.prototype.nextTurn = nextTurn;
+World.prototype.newGeneration = newGeneration;
 World.prototype.initState = initState;
 World.prototype.spawnFood = spawnFood;
 World.prototype.spawnSnake = spawnSnake;

@@ -3,6 +3,7 @@ class Snake {
         this.world = world;
         console.debug(`creating snake# ${world.snakeCount + 1}`);
         this.id = world.snakeCount + 1;
+        this.age = 0;
         this.world.snakeCount++;
         this.visionDistance = 5;
         this.energyBase = 10;
@@ -134,6 +135,7 @@ class Snake {
         this.world.modifyTile(tail.x, tail.y, this.world.TILES.empty);
     }
     move() {
+        this.age++;
         const TILES = this.world.TILES;
 
         // decide which direction to go
@@ -199,6 +201,7 @@ class Snake {
         // remove from map
         this.cells.forEach((cell) => this.world.modifyTile(cell.x, cell.y, this.world.TILES.empty));
         // remove from world
+        this.world.deadSnakes.push(this);
         this.world.snakes = this.world.snakes.filter((snake) => snake.id !== this.id);
     }
 }
