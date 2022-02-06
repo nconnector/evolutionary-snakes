@@ -1,7 +1,7 @@
 class Snake {
     constructor(world, cells, brain, parentId = 0) {
         this.world = world;
-        console.debug(`creating snake# ${world.snakeCount + 1}`);
+        // console.debug(`creating snake# ${world.snakeCount + 1}`);
         this.id = world.snakeCount + 1;
         this.parentId = parentId;
         this.age = 0;
@@ -38,7 +38,7 @@ class Snake {
                 };
             })
         );
-        const dont = -1000;
+        const dont = -100;
         brain[5][4].block[3] = dont;
         brain[5][6].block[1] = dont;
         brain[4][5].block[0] = dont;
@@ -225,7 +225,7 @@ class Snake {
         return newBrain;
     }
     die(causeOfDeath) {
-        console.debug(`snake #${this.id} died of ${causeOfDeath}`);
+        // console.debug(`snake #${this.id} died of ${causeOfDeath}`);
         this.causeOfDeath = causeOfDeath;
         // remove from map
         this.cells.forEach((cell) => this.world.modifyTile(cell.x, cell.y, this.world.TILES.empty));

@@ -58,7 +58,7 @@ function newGeneration() {
     // generate array of brains from N oldest dead snakes
     const oldestSnakes = this.deadSnakes
         .sort((a, b) => {
-            return a.age - b.age;
+            return b.age - a.age;
         })
         .splice(0, this.NEW_GENERATION_POPULATION_SIZE);
     // empty dead snakes array
